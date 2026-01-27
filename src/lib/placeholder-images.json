@@ -1,3 +1,106 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "user1-avatar",
+      "description": "Avatar for user 1",
+      "imageUrl": "https://images.unsplash.com/photo-1724435811349-32d27f4d5806?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwcm9maWxlJTIwcGVyc29ufGVufDB8fHx8MTc2OTUwNzcwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "profile person"
+    },
+    {
+      "id": "user2-avatar",
+      "description": "Avatar for user 2",
+      "imageUrl": "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwcm9maWxlJTIwd29tYW58ZW58MHx8fHwxNzY5NDU4NDIxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "profile woman"
+    },
+    {
+      "id": "user3-avatar",
+      "description": "Avatar for user 3",
+      "imageUrl": "https://images.unsplash.com/photo-1701481063068-0103e348d844?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwcm9maWxlJTIwbWFufGVufDB8fHx8MTc2OTQ1ODQyMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "profile man"
+    },
+    {
+      "id": "currentUser-avatar",
+      "description": "Avatar for current user",
+      "imageUrl": "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwcm9maWxlfGVufDB8fHx8MTc2OTUzODUxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "profile"
+    },
+    {
+      "id": "post1-image",
+      "description": "Image for post 1",
+      "imageUrl": "https://images.unsplash.com/photo-1617634667039-8e4cb277ab46?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxuYXR1cmUlMjBsYW5kc2NhcGV8ZW58MHx8fHwxNzY5NTE0Nzg1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nature landscape"
+    },
+    {
+      "id": "post2-gallery1",
+      "description": "Gallery image 1 for post 2",
+      "imageUrl": "https://images.unsplash.com/photo-1659546476471-eb2e7b4fc549?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y2l0eSUyMGFyY2hpdGVjdHVyZXxlbnwwfHx8fDE3Njk0NTQ1OTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city architecture"
+    },
+    {
+      "id": "post2-gallery2",
+      "description": "Gallery image 2 for post 2",
+      "imageUrl": "https://images.unsplash.com/photo-1672391460798-8fffd466b329?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx1cmJhbiUyMHN0cmVldHxlbnwwfHx8fDE3Njk1MTIwNTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "urban street"
+    },
+    {
+      "id": "post2-gallery3",
+      "description": "Gallery image 3 for post 2",
+      "imageUrl": "https://images.unsplash.com/photo-1514439827219-9137a0b99245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxuaWdodCUyMGNpdHl8ZW58MHx8fHwxNzY5NTA4OTAwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "night city"
+    },
+    {
+      "id": "explore1",
+      "description": "Explore image 1",
+      "imageUrl": "https://images.unsplash.com/photo-1528543606781-2f6e6857f318?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0cmF2ZWwlMjBhZHZlbnR1cmV8ZW58MHx8fHwxNzY5NTI3MDcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "travel adventure"
+    },
+    {
+      "id": "explore2",
+      "description": "Explore image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1719461306478-67d7612ba835?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmb29kJTIwZGVsaWNpb3VzfGVufDB8fHx8MTc2OTQ1MzA4NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "food delicious"
+    },
+    {
+      "id": "explore3",
+      "description": "Explore image 3",
+      "imageUrl": "https://images.unsplash.com/photo-1568252542512-9fe8fe9c87bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxmYXNoaW9uJTIwc3R5bGV8ZW58MHx8fHwxNzY5NTIyOTg3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fashion style"
+    },
+    {
+      "id": "explore4",
+      "description": "Explore image 4",
+      "imageUrl": "https://images.unsplash.com/photo-1544273677-c433136021d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhcnQlMjBhYnN0cmFjdHxlbnwwfHx8fDE3Njk1NDg2MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "art abstract"
+    },
+    {
+      "id": "explore5",
+      "description": "Explore image 5",
+      "imageUrl": "https://images.unsplash.com/photo-1584949091708-0a21d38ab8de?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dGVjaG5vbG9neSUyMGNvZGV8ZW58MHx8fHwxNzY5NTE2OTIwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "technology code"
+    },
+    {
+      "id": "explore6",
+      "description": "Explore image 6",
+      "imageUrl": "https://images.unsplash.com/photo-1667791274080-49884d1f5f5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcG9ydHMlMjBmaXRuZXNzfGVufDB8fHx8MTc2OTU0ODYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sports fitness"
+    },
+    {
+      "id": "explore7",
+      "description": "Explore image 7",
+      "imageUrl": "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtdXNpYyUyMGNvbmNlcnR8ZW58MHx8fHwxNzY5NDg1NTg1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "music concert"
+    },
+    {
+      "id": "explore8",
+      "description": "Explore image 8",
+      "imageUrl": "https://images.unsplash.com/photo-1560115246-30778a6578be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxhbmltYWwlMjBjdXRlfGVufDB8fHx8MTc2OTU0ODYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "animal cute"
+    },
+    {
+      "id": "explore9",
+      "description": "Explore image 9",
+      "imageUrl": "https://images.unsplash.com/photo-1573164574572-cb89e39749b4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMG1lZXRpbmd8ZW58MHx8fHwxNzY5NTMwMDg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "business meeting"
+    }
+  ]
 }
