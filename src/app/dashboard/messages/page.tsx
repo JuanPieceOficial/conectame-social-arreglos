@@ -1,18 +1,30 @@
+"use client";
+
+import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { users } from "@/lib/data";
-import { Search, Send, Smile } from "lucide-react";
+import { ArrowLeft, Search, Send, Smile } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { User } from "@/lib/types";
 
 const conversations = [users['user-1'], users['user-2'], users['user-3']];
 
 export default function MessagesPage() {
+  const [selectedUser, setSelectedUser] = useState<User>(users['user-1']);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleConversationSelect = (user: User) => {
+    setSelectedUser(user);
+    setIsChatOpen(true);
+  }
+
   return (
     <div className="h-screen flex flex-col">
        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 h-full min-h-0">
-         <div className="col-span-1 border-r flex flex-col h-full">
+         <div className={cn("col-span-1 border-r flex flex-col h-full", isChatOpen && "hidden md:flex")}>
            <div className="p-4 border-b">
             <h1 className="text-2xl font-bold font-headline">Messages</h1>
             <div className="relative mt-4">
@@ -22,7 +34,7 @@ export default function MessagesPage() {
            </div>
            <ScrollArea className="flex-1">
               {conversations.map(user => (
-                <div key={user.id} className="flex items-center gap-3 p-4 hover:bg-muted cursor-pointer transition-colors">
+                <div key={user.id} className="flex items-center gap-3 p-4 hover:bg-muted cursor-pointer transition-colors" onClick={() => handleConversationSelect(user)}>
                   <Avatar>
                     <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="profile person"/>
                     <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -35,18 +47,21 @@ export default function MessagesPage() {
               ))}
            </ScrollArea>
          </div>
-         <div className="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col h-full bg-background">
+         <div className={cn("col-span-1 md:col-span-2 lg:col-span-3 flex-col h-full bg-background", isChatOpen ? "flex" : "hidden md:flex")}>
           <div className="p-4 border-b flex items-center gap-3">
+              <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsChatOpen(false)}>
+                <ArrowLeft />
+              </Button>
               <Avatar>
-                <AvatarImage src={users['user-1'].avatarUrl} alt={users['user-1'].name} data-ai-hint="profile person"/>
-                <AvatarFallback>{users['user-1'].name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={selectedUser.avatarUrl} alt={selectedUser.name} data-ai-hint="profile person"/>
+                <AvatarFallback>{selectedUser.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-semibold">{users['user-1'].name}</p>
-                <p className="text-sm text-muted-foreground">@{users['user-1'].username}</p>
+                <p className="font-semibold">{selectedUser.name}</p>
+                <p className="text-sm text-muted-foreground">@{selectedUser.username}</p>
               </div>
           </div>
-          <div className="flex-1 p-6 flex flex-col-reverse">
+          <div className="flex-1 p-6 flex flex-col-reverse overflow-y-auto">
             <div className="space-y-4">
               <div className="flex justify-start">
                   <div className="bg-muted p-3 rounded-lg max-w-lg">
