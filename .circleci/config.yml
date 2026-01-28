@@ -9,6 +9,7 @@ jobs:
     environment:
       # Corrected ANDROID_HOME path based on CircleCI build logs
       ANDROID_HOME: /home/circleci/android-sdk
+      GRADLE_OPTS: -Xmx4g # Allocate more memory to Gradle daemon
     steps:
       - checkout
       - node/install:
