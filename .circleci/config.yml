@@ -9,7 +9,6 @@ jobs:
     environment:
       # Corrected ANDROID_HOME path based on CircleCI build logs
       ANDROID_HOME: /home/circleci/android-sdk
-    no_output_timeout: 30m # Increase timeout for potentially long native builds
     steps:
       - checkout
       - node/install:
@@ -47,6 +46,7 @@ jobs:
           command: chmod +x mobile/ConectameApp/android/gradlew
       - run:
           name: Build Android Release AAB
+          no_output_timeout: 30m # Increase timeout for potentially long native builds
           command: cd mobile/ConectameApp/android && ./gradlew bundleRelease
       - store_artifacts:
           path: mobile/ConectameApp/android/app/build/outputs/bundle/release/app-release.aab
