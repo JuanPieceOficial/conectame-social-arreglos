@@ -28,6 +28,12 @@ jobs:
           cd mobile/ConectameApp
           npm install
 
+      - name: Clear Metro cache
+        run: |
+          cd mobile/ConectameApp
+          rm -rf ./.metro
+          rm -rf ./node_modules/.cache
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
