@@ -18,6 +18,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Clean React Native project directory
+        run: |
+          cd mobile/ConectameApp
+          git clean -fdx # Cleans untracked files and directories, ensuring a pristine state.
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
