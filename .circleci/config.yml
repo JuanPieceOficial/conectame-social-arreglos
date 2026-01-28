@@ -1,0 +1,45 @@
+version: 2.1
+jobs:
+  build_android:
+    docker:
+      - image: cimg/android:2024.01 # This image includes Node.js, JDK 17, and Android SDK
+    environment:
+      # ANDROID_HOME is usually /opt/android/sdk in cimg/android images
+      ANDROID_HOME: /opt/android/sdk
+    steps:
+      - checkout
+      - run:
+          name: Display Java Version, ANDROID_HOME and PATH
+          command: |
+            java -version
+            echo "JAVA_HOME is $JAVA_HOME"
+            echo "ANDROID_HOME is $ANDROID_HOME"
+            echo "PATH is $PATH"
+      - run:
+          name: Clean npm cache and install dependencies
+          command: |
+            cd mobile/ConectameApp
+            npm cache clean --force
+            rm -rf node_modules package-lock.json
+            npm install
+      - run:
+          name: Clean Gradle caches and project
+          command: |
+            rm -rf ~/.gradle
+            cd mobile/ConectameApp/android
+            rm -rf ./.gradle
+            ./gradlew clean
+      - run:
+          name: Grant execute permission to gradlew
+          command: chmod +x mobile/ConectameApp/android/gradlew
+      - run:
+          name: Build Android Release AAB
+          command: cd mobile/ConectameApp/android && ./gradlew bundleRelease
+      - store_artifacts:
+          path: mobile/ConectameApp/android/app/build/outputs/bundle/release/app-release.aab
+          destination: app-release.aab
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build_android
