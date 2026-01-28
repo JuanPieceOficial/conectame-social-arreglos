@@ -5,14 +5,14 @@ orbs:
 jobs:
   build_android:
     docker:
-      - image: cimg/android:2024.01 # This image includes Node.js, JDK 17, and Android SDK
+      - image: cimg/android:2024.01
     environment:
-      # ANDROID_HOME is usually /opt/android/sdk in cimg/android images
-      ANDROID_HOME: /opt/android/sdk
+      # Corrected ANDROID_HOME path based on CircleCI build logs
+      ANDROID_HOME: /home/circleci/android-sdk
     steps:
       - checkout
       - node/install:
-          node-version: '18.17.1' # Specify a compatible Node.js version
+          node-version: '20.x' # Upgrade to Node.js 20.x for Array.prototype.toReversed() compatibility
       - run:
           name: Display Java Version, ANDROID_HOME and PATH
           command: |
