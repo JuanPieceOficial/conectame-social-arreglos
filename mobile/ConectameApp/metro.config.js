@@ -9,11 +9,17 @@ const path = require('path'); // Import path module
  */
 const config = {
   resolver: {
-    alias: {
-      '@': path.resolve(__dirname, './src'), // Map '@' to the 'src' directory
-    },
-    // Ensure all packages are resolved from the local node_modules
-    nodeModulesPaths: [path.resolve(__dirname, './node_modules')],
+    extraNodeModules: new Proxy(
+      {},
+      {
+        get: (target, name) => {
+          if (name === '@') {
+            return path.resolve(__dirname, 'src');
+          }
+          return path.join(process.cwd(), `node_modules/${name}`);
+        },
+      }
+    ),
   },
 };
 
