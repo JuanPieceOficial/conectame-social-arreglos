@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  node: circleci/node@5.0.0
+
 jobs:
   build_android:
     docker:
@@ -8,6 +11,8 @@ jobs:
       ANDROID_HOME: /opt/android/sdk
     steps:
       - checkout
+      - node/install:
+          version: '18.x' # Specify a compatible Node.js version
       - run:
           name: Display Java Version, ANDROID_HOME and PATH
           command: |
@@ -15,6 +20,8 @@ jobs:
             echo "JAVA_HOME is $JAVA_HOME"
             echo "ANDROID_HOME is $ANDROID_HOME"
             echo "PATH is $PATH"
+            npm -v
+            node -v
       - run:
           name: Clean npm cache and install dependencies
           command: |
