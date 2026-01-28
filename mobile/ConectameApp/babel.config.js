@@ -4,6 +4,17 @@ module.exports = function(api) {
     presets: ['module:@react-native/babel-preset'],
     plugins: [
       'react-native-reanimated/plugin',
+      [
+        'module-resolver',
+        {
+          root: ['./src'],
+          extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+          alias: {
+            "@": "./src",
+          },
+        },
+      ],
+      '@babel/plugin-transform-export-namespace-from',
     ],
   };
 };
