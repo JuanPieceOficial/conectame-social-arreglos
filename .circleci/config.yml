@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          node-version: '20.x' # Upgrade to Node.js 20.x for Array.prototype.toReversed() compatibility
+          node-version: '20.9.0' # Upgrade to Node.js 20.x for Array.prototype.toReversed() compatibility
       - run:
           name: Display Java Version, ANDROID_HOME and PATH
           command: |
