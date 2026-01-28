@@ -9,6 +9,7 @@ jobs:
     environment:
       # Corrected ANDROID_HOME path based on CircleCI build logs
       ANDROID_HOME: /home/circleci/android-sdk
+    no_output_timeout: 30m # Increase timeout for potentially long native builds
     steps:
       - checkout
       - node/install:
