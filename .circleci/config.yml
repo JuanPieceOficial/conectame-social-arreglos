@@ -30,6 +30,11 @@ jobs:
             rm -rf node_modules package-lock.json
             npm install
       - run:
+          name: Install Ninja Build
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y ninja-build
+      - run:
           name: Clean Gradle caches and project
           command: |
             rm -rf ~/.gradle
