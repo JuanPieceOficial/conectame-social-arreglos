@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          version: '18.x' # Specify a compatible Node.js version
+          node-version: '18.x' # Specify a compatible Node.js version
       - run:
           name: Display Java Version, ANDROID_HOME and PATH
           command: |
