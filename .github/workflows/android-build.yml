@@ -50,13 +50,13 @@ jobs:
           cd mobile/ConectameApp/android
           chmod +x gradlew
 
-      - name: Build Android Release AAB
+      - name: Build Android Release APK
         run: |
           cd mobile/ConectameApp/android
-          ./gradlew bundleRelease
+          ./gradlew assembleRelease
 
-      - name: Upload Release AAB as artifact
+      - name: Upload Release APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-aab
-          path: mobile/ConectameApp/android/app/build/outputs/bundle/release/app-release.aab
+          name: app-release-apk
+          path: mobile/ConectameApp/android/app/build/outputs/apk/release/app-release.apk
