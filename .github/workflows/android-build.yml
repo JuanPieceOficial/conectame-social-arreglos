@@ -62,6 +62,9 @@ jobs:
       - name: Build Android Release APK
         run: ./android/gradlew -p android assembleRelease
 
+      - name: List APK contents for debug
+        run: ls -R android/app/build/outputs/apk/release/
+
       - name: Upload Release APK as artifact
         uses: actions/upload-artifact@v4
         with:
