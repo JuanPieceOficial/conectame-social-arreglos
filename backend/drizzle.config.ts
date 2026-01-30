@@ -3,6 +3,9 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env' }); // Explicitly load .env
 
+console.log('TURSO_DATABASE_URL (from config):', process.env.TURSO_DATABASE_URL);
+console.log('TURSO_AUTH_TOKEN (from config):', process.env.TURSO_AUTH_TOKEN);
+
 const TURSO_DATABASE_URL = process.env.TURSO_DATABASE_URL;
 const TURSO_AUTH_TOKEN = process.env.TURSO_AUTH_TOKEN;
 
