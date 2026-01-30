@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://toby.hidencloud.com:24652/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;

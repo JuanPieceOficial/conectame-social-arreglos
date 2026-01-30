@@ -6,20 +6,13 @@ import { PostCard } from "@/components/feed/post-card";
 import { posts } from "@/lib/data";
 import { Button } from "@/components/ui/button"; // Assuming a Button component exists
 
-// Small change to trigger CI/CD
-const BACKEND_URL = "http://toby.hidencloud.com:24652";
-
 export default function FeedPage() {
   const [backendStatus, setBackendStatus] = useState("Not checked");
 
   const checkBackendStatus = async () => {
-    if (!BACKEND_URL) {
-      setBackendStatus("Error: Backend URL not configured.");
-      return;
-    }
     try {
       setBackendStatus("Checking...");
-      const response = await fetch(`${BACKEND_URL}/health`);
+      const response = await fetch(`/api/health`);
       const data = await response.json();
       setBackendStatus(`Backend Status: ${data.status} (DB: ${data.dbConnection || 'N/A'})`);
     } catch (error) {
