@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { users } from './schema';
 import { eq } from 'drizzle-orm';
+import { authMiddleware } from './middleware/authMiddleware';
 
 dotenv.config();
 
@@ -27,8 +28,7 @@ const client = createClient({
 });
 export const db = drizzle(client);
 
-// Basic health check endpoint
-// Basic health check endpoint with Turso connection test
+// Basic health check endpoint (unprotected)
 app.get('/health', async (req, res) => {
     try {
         await db.$client.execute('SELECT 1'); // Simple query to test connection
@@ -37,6 +37,11 @@ app.get('/health', async (req, res) => {
         console.error('Database connection failed:', error);
         res.status(500).json({ status: 'error', message: 'Backend is running, but database connection failed', error: error.message });
     }
+});
+
+// Protected endpoint example
+app.get('/protected', authMiddleware, (req, res) => {
+    res.status(200).json({ message: `Welcome ${req.user?.email}, you accessed a protected route!` });
 });
 
 // User registration endpoint

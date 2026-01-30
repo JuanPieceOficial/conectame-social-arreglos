@@ -5,29 +5,29 @@ import { CreatePostForm } from "@/components/feed/create-post-form";
 import { PostCard } from "@/components/feed/post-card";
 import { posts } from "@/lib/data";
 import { Button } from "@/components/ui/button"; // Assuming a Button component exists
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from 'next/navigation';
 
 export default function FeedPage() {
   const [backendStatus, setBackendStatus] = useState("Not checked");
-
-  const checkBackendStatus = async () => {
-    try {
-      setBackendStatus("Checking...");
-      const response = await fetch(`/api/health`);
-      const data = await response.json();
-      setBackendStatus(`Backend Status: ${data.status} (DB: ${data.dbConnection || 'N/A'})`);
-    } catch (error) {
-      console.error("Failed to connect to backend:", error);
-      setBackendStatus("Failed to connect to backend.");
-    }
-  };
+  const { isAuthenticated, logout } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    // Optionally check status on component mount
-    // checkBackendStatus();
-  }, []);
+    if (!isAuthenticated) {
+      router.push('/login'); // Redirect to login if not authenticated
+    }
+  }, [isAuthenticated, router]);
+  
+  if (!isAuthenticated) {
+    return null; // or a loading spinner
+  }
 
   return (
     <div className="w-full max-w-2xl mx-auto py-8 px-4">
+      <div className="flex justify-end mb-4">
+        <Button onClick={logout}>Logout</Button>
+      </div>
       <div className="space-y-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Backend Connection Test</h2>

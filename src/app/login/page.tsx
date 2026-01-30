@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth'; // Import useAuth hook
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+  const { login } = useAuth(); // Use the useAuth hook
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +38,8 @@ export default function LoginPage() {
         return;
       }
 
-      // Store the JWT token
-      localStorage.setItem('token', data.token);
+      // Store the JWT token using the login function from useAuth
+      login(data.token);
 
       setSuccess('Login successful! Redirecting to dashboard...');
       setTimeout(() => {
