@@ -1,4 +1,4 @@
-import { AiCreationForm } from "@/components/create/ai-creation-form";
+// import { AiCreationForm } from "@/components/create/ai-creation-form";
 
 export default function CreatePage() {
   return (
@@ -10,7 +10,12 @@ export default function CreatePage() {
             Need inspiration? Describe your post and let our AI suggest a filter or design a background for you.
           </p>
         </div>
-        <AiCreationForm />
+        {/* <AiCreationForm /> */}
+        <div>
+          <p className="text-center text-muted-foreground">
+            The AI creation form is temporarily disabled for the mobile build.
+          </p>
+        </div>
       </div>
     </div>
   );

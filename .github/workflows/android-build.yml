@@ -1,4 +1,4 @@
-name: Android CI
+name: Build Capacitor Android APK
 
 on:
   push:
@@ -26,15 +26,19 @@ jobs:
       - name: Cache Node.js modules
         uses: actions/cache@v4
         with:
-          path: mobile/ConectameApp/node_modules
-          key: ${{ runner.os }}-node-v2-${{ hashFiles('mobile/ConectameApp/package-lock.json') }}
+          path: node_modules
+          key: ${{ runner.os }}-node-v3-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-v2-
+            ${{ runner.os }}-node-v3-
 
       - name: Install npm dependencies
-        run: |
-          cd mobile/ConectameApp
-          npm install
+        run: npm install
+
+      - name: Build Next.js static assets
+        run: npm run build
+
+      - name: Sync Capacitor project
+        run: npx cap sync
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -48,22 +52,18 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-v2-${{ hashFiles('mobile/ConectameApp/android/build.gradle', 'mobile/ConectameApp/android/gradle/wrapper/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-v3-${{ hashFiles('android/build.gradle', 'android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-v2-
+            ${{ runner.os }}-gradle-v3-
 
       - name: Grant execute permission for gradlew
-        run: |
-          cd mobile/ConectameApp/android
-          chmod +x gradlew
+        run: chmod +x android/gradlew
 
       - name: Build Android Release APK
-        run: |
-          cd mobile/ConectameApp/android
-          ./gradlew assembleRelease
+        run: ./android/gradlew -p android assembleRelease
 
       - name: Upload Release APK as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-release-apk
-          path: mobile/ConectameApp/android/app/build/outputs/apk/release/app-release.apk
+          name: app-release.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
