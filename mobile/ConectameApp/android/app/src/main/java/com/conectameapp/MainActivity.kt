@@ -4,8 +4,9 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import com.facebook.react.ReactRootView // Import this
-import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView // Import this
+import com.facebook.react.ReactRootView
+import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView
+import android.os.Bundle // Add this import
 
 class MainActivity : ReactActivity() {
 
@@ -25,4 +26,9 @@ class MainActivity : ReactActivity() {
               return RNGestureHandlerEnabledRootView(this@MainActivity)
           }
       }
+
+  // Add this method for react-native-screens
+  override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(null) // This line is important for react-native-screens
+  }
 }
