@@ -10,8 +10,8 @@
     "build": "tsc",
     "postbuild": "rm -rf *.js *.js.map *.d.ts && cpx \"dist/**/*\" .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db:generate": "drizzle-kit generate --schema=./schema.ts --dialect=sqlite --out=./drizzle --url=${TURSO_DATABASE_URL} --auth-token=${TURSO_AUTH_TOKEN}",
-    "db:push": "drizzle-kit push --schema=./schema.ts --dialect=sqlite --url=${TURSO_DATABASE_URL} --auth-token=${TURSO_AUTH_TOKEN}"
+    "db:generate": "dotenv drizzle-kit generate --schema=./schema.ts --dialect=sqlite --out=./drizzle --url=${TURSO_DATABASE_URL} --auth-token=${TURSO_AUTH_TOKEN}",
+    "db:push": "dotenv drizzle-kit push --schema=./schema.ts --dialect=sqlite --url=${TURSO_DATABASE_URL} --auth-token=${TURSO_AUTH_TOKEN}"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +34,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.1.0",
     "cpx": "^1.5.0",
+    "dotenv-cli": "^11.0.0",
     "drizzle-kit": "^0.31.8",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
