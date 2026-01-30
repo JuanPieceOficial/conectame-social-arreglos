@@ -11,13 +11,13 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 import { SettingsScreen } from './src/screens/SettingsScreen';
 
 import { AppSidebar } from './src/components/layout/AppSidebar';
-import { ToastProvider } from './src/hooks/use-toast'; // Assuming a ToastProvider exists
+import Toast from 'react-native-toast-message';
 
 const Drawer = createDrawerNavigator();
 
 function App(): React.JSX.Element {
   return (
-    <ToastProvider>
+    <>
       <NavigationContainer>
         <Drawer.Navigator
           drawerContent={(props) => <AppSidebar {...props} />}
@@ -31,7 +31,8 @@ function App(): React.JSX.Element {
           <Drawer.Screen name="Settings" component={SettingsScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
-    </ToastProvider>
+      <Toast />
+    </>
   );
 }
 
