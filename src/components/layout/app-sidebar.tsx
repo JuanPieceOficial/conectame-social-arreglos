@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Home, Search, MessageSquare, PlusSquare, User, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { users } from "@/lib/data";
+// import { users } from "@/lib/data"; // REMOVE THIS
+import { useAuth } from "@/hooks/use-auth"; // IMPORT useAuth
 
 const Logo = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -26,13 +27,20 @@ const Logo = () => (
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const currentUser = users["user-current"];
+  // const currentUser = users["user-current"]; // REMOVE THIS
+  const { user, logout } = useAuth(); // Get user and logout from useAuth
 
   const menuItems = [
     { href: "/dashboard", label: "Home", icon: Home },
     { href: "/dashboard/explore", label: "Explore", icon: Search },
     { href: "/dashboard/messages", label: "Messages", icon: MessageSquare },
   ];
+
+  // Placeholder for user display if no user is logged in
+  const displayUserName = user?.user_metadata?.username || user?.email || 'Guest';
+  const displayAvatarUrl = user?.user_metadata?.avatar_url || '/placeholder-avatar.png';
+  const displayAvatarFallback = user?.user_metadata?.username?.charAt(0) || user?.email?.charAt(0) || '?';
+
 
   return (
     <Sidebar>
@@ -85,14 +93,14 @@ export function AppSidebar() {
         <div className="p-2">
             <div className="flex items-center gap-3 p-2 rounded-lg bg-sidebar-accent">
                 <Avatar>
-                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} data-ai-hint="profile person"/>
-                    <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={displayAvatarUrl} alt={displayUserName} data-ai-hint="profile person"/>
+                    <AvatarFallback>{displayAvatarFallback}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col overflow-hidden">
-                    <p className="font-semibold truncate">{currentUser.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">@{currentUser.username}</p>
+                    <p className="font-semibold truncate">{displayUserName}</p>
+                    <p className="text-xs text-muted-foreground truncate">@{displayUserName}</p> {/* Using displayUserName for username, adjust if profile table has separate username */}
                 </div>
-                <Button variant="ghost" size="icon" className="ml-auto">
+                <Button variant="ghost" size="icon" className="ml-auto" onClick={logout}> {/* Add onClick to logout */}
                     <LogOut className="h-4 w-4"/>
                 </Button>
             </div>
