@@ -46,7 +46,7 @@ export function AppSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} legacyBehavior passHref>
+              <Link href={item.href}>
                 <SidebarMenuButton
                   isActive={pathname === item.href}
                   tooltip={{ children: item.label }}
@@ -59,12 +59,12 @@ export function AppSidebar() {
           ))}
         </SidebarMenu>
         <div className="mt-4 px-2">
-           <Link href="/dashboard/create" passHref legacyBehavior>
+           <Link href="/dashboard/create">
              <Button asChild size="lg" className="w-full font-headline">
-                <a>
+                <span>
                     <PlusSquare className="mr-2"/>
                     Create Post
-                </a>
+                </span>
             </Button>
            </Link>
         </div>

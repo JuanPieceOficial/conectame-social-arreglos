@@ -43,3 +43,8 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+
+# Custom ignored files
+backend.tar.gz
+conectame-release.keystore
+keystore_base64.txt
