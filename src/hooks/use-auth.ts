@@ -53,17 +53,38 @@ export function useAuth() {
     router.push('/dashboard');
   }, [router]);
 
-  const register = useCallback(async (email: string, password: string) => {
+  const register = useCallback(async (email: string, password: string, username: string) => {
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username: username, // Store username in user_metadata
+        },
+      },
     });
+    
+    if (error) {
+      setLoading(false);
+      throw error;
+    }
+
+    if (data.user) {
+      // Also create a profile entry in the public.profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert([{ id: data.user.id, username: username, email: email }]); // Assuming email is also stored in profiles
+
+      if (profileError) {
+        setLoading(false);
+        throw profileError;
+      }
+    }
+    
     setLoading(false);
-    if (error) throw error;
     setUser(data.user);
     setIsAuthenticated(true);
-    // Supabase often logs in the user automatically after sign up, so redirect
     router.push('/dashboard'); 
   }, [router]);
 

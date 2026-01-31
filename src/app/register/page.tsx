@@ -24,7 +24,7 @@ export default function RegisterPage() {
     setSuccess('');
 
     try {
-      await register(email, password); // Use Supabase register from useAuth
+      await register(email, password, username); // Pass username to register function
       setSuccess('Registration successful! Redirecting to dashboard...');
       // Redirection is handled within the register function in useAuth
     } catch (err: any) {
