@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   username text UNIQUE NOT NULL,
   avatar_url text,
   bio text,
-  created_at timestamp with time zone DEFAULT now()
+  created_at timestamp with time zone DEFAULT now(),
+  email text -- NEW: Add email column to profiles table
 );
 
 -- Table: public.posts
