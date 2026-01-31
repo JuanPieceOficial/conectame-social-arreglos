@@ -14,50 +14,62 @@ export function useAuth() {
   // NEW: Helper function to fetch or create user profile
   const fetchUserAndProfile = useCallback(async (session: any | null) => {
     setLoading(true); // Start loading when fetching profile
-    if (session) {
-      setUser(session.user);
-      setIsAuthenticated(true);
+    try { // NEW: Add try-catch block
+      if (session) {
+        setUser(session.user);
+        setIsAuthenticated(true);
 
-      const { data: existingProfile, error: fetchError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single();
-
-      if (fetchError && fetchError.code === 'PGRST116') { // PGRST116 means no rows found
-        // Profile does not exist, create a new one
-        console.log("Profile not found, creating a new one.");
-        const { data: newProfile, error: createError } = await supabase
+        const { data: existingProfile, error: fetchError } = await supabase
           .from('profiles')
-          .insert([
-            {
-              id: session.user.id,
-              username: session.user.email?.split('@')[0] || `user_${session.user.id.substring(0, 8)}`, // Default username
-              email: session.user.email,
-              avatar_url: session.user.user_metadata?.avatar_url, // Use from auth if available
-            }
-          ])
-          .select()
+          .select('*')
+          .eq('id', session.user.id)
           .single();
 
-        if (createError) {
-          console.error("Error creating profile:", createError);
+        if (fetchError && fetchError.code === 'PGRST116') { // PGRST116 means no rows found
+          console.log("Profile not found, creating a new one.");
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert([
+              {
+                id: session.user.id,
+                username: session.user.email?.split('@')[0] || `user_${session.user.id.substring(0, 8)}`,
+                email: session.user.email,
+                avatar_url: session.user.user_metadata?.avatar_url,
+              }
+            ])
+            .select()
+            .single();
+
+          if (createError) {
+            console.error("Error creating profile:", createError);
+            setProfile(null);
+            // NEW: Propagate error to ensure loading is false and potentially show a message
+            throw createError;
+          } else {
+            setProfile(newProfile);
+          }
+        } else if (fetchError) {
+          console.error("Error fetching profile:", fetchError);
           setProfile(null);
-        } else {
-          setProfile(newProfile);
+          // NEW: Propagate error
+          throw fetchError;
+        } else if (existingProfile) {
+          setProfile(existingProfile);
         }
-      } else if (fetchError) {
-        console.error("Error fetching profile:", fetchError);
-        setProfile(null); // Clear profile on other errors
-      } else if (existingProfile) {
-        setProfile(existingProfile);
+      } else {
+        setUser(null);
+        setProfile(null);
+        setIsAuthenticated(false);
       }
-    } else {
+    } catch (err) { // NEW: Catch any errors
+      console.error("Unhandled error in fetchUserAndProfile:", err);
+      // Ensure loading is set to false even on unhandled errors
       setUser(null);
-      setProfile(null); // Clear profile
+      setProfile(null);
       setIsAuthenticated(false);
+    } finally { // NEW: Ensure setLoading(false) is always called
+      setLoading(false);
     }
-    setLoading(false); // End loading
   }, []);
 
 
