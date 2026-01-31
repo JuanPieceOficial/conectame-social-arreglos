@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
-  const { login } = useAuth(); // Use the useAuth hook
+  const { login, loading } = useAuth(); // Use the useAuth hook, get loading state
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,28 +23,9 @@ export default function LoginPage() {
     setSuccess('');
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || 'Login failed');
-        return;
-      }
-
-      // Store the JWT token using the login function from useAuth
-      login(data.token);
-
+      await login(email, password); // Use Supabase login from useAuth
       setSuccess('Login successful! Redirecting to dashboard...');
-      setTimeout(() => {
-        router.push('/dashboard'); // Redirect to dashboard or home page
-      }, 1000);
+      // Redirection is handled within the login function in useAuth
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.message || 'An unexpected error occurred.');
@@ -83,8 +64,8 @@ export default function LoginPage() {
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {success && <p className="text-green-500 text-sm">{success}</p>}
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </CardContent>

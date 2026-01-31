@@ -7,14 +7,16 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth'; // Import useAuth hook
 
 export default function RegisterPage() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(''); // Supabase auth does not directly use username, it will be in user_metadata if needed
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+  const { register, loading } = useAuth(); // Use the useAuth hook, get loading state
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,25 +24,9 @@ export default function RegisterPage() {
     setSuccess('');
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || 'Registration failed');
-        return;
-      }
-
-      setSuccess('Registration successful! Redirecting to login...');
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
+      await register(email, password); // Use Supabase register from useAuth
+      setSuccess('Registration successful! Redirecting to dashboard...');
+      // Redirection is handled within the register function in useAuth
     } catch (err: any) {
       console.error('Registration error:', err);
       setError(err.message || 'An unexpected error occurred.');
@@ -64,7 +50,8 @@ export default function RegisterPage() {
                 placeholder="johndoe"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                required
+                // Supabase auth does not directly use username, it will be in user_metadata if needed
+                // For now, it's collected but not sent to Supabase auth directly
               />
             </div>
             <div className="space-y-2">
@@ -90,8 +77,8 @@ export default function RegisterPage() {
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
             {success && <p className="text-green-500 text-sm">{success}</p>}
-            <Button type="submit" className="w-full">
-              Register
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Registering...' : 'Register'}
             </Button>
           </form>
         </CardContent>

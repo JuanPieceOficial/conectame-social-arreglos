@@ -2,40 +2,87 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase'; // Import the Supabase client
 
 export function useAuth() {
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<any | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-      setIsAuthenticated(true);
-    } else {
-      setToken(null);
-      setIsAuthenticated(false);
-    }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setUser(session.user);
+        setIsAuthenticated(true);
+      } else {
+        setUser(null);
+        setIsAuthenticated(false);
+      }
+      setLoading(false);
+    });
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (session) {
+          setUser(session.user);
+          setIsAuthenticated(true);
+        } else {
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+        setLoading(false);
+      }
+    );
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, []);
 
-  const login = useCallback((newToken: string) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
+  const login = useCallback(async (email: string, password: string) => {
+    setLoading(true);
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    setLoading(false);
+    if (error) throw error;
+    setUser(data.user);
     setIsAuthenticated(true);
-  }, []);
+    router.push('/dashboard');
+  }, [router]);
 
-  const logout = useCallback(() => {
-    localStorage.removeItem('token');
-    setToken(null);
+  const register = useCallback(async (email: string, password: string) => {
+    setLoading(true);
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    setLoading(false);
+    if (error) throw error;
+    setUser(data.user);
+    setIsAuthenticated(true);
+    // Supabase often logs in the user automatically after sign up, so redirect
+    router.push('/dashboard'); 
+  }, [router]);
+
+  const logout = useCallback(async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signOut();
+    setLoading(false);
+    if (error) throw error;
+    setUser(null);
     setIsAuthenticated(false);
-    router.push('/login'); // Redirect to login page on logout
+    router.push('/login');
   }, [router]);
 
   return {
-    token,
+    user,
     isAuthenticated,
+    loading,
     login,
+    register,
     logout,
   };
 }

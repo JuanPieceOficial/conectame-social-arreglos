@@ -10,22 +10,27 @@ import { useRouter } from 'next/navigation';
 
 export default function FeedPage() {
   const [backendStatus, setBackendStatus] = useState("Not checked");
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, loading, logout } = useAuth(); // Get user and loading state
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!loading && !isAuthenticated) { // Redirect only after loading is complete
       router.push('/login'); // Redirect to login if not authenticated
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, loading, router]);
   
+  if (loading) {
+    return <div>Loading authentication...</div>; // Show loading state
+  }
+
   if (!isAuthenticated) {
-    return null; // or a loading spinner
+    return null; // Or a more elaborate loading/redirecting component
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto py-8 px-4">
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between items-center mb-4">
+        {user && <p>Welcome, {user.email}!</p>}
         <Button onClick={logout}>Logout</Button>
       </div>
       <div className="space-y-6">
