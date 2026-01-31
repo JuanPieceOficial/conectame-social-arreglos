@@ -1,11 +1,25 @@
--- Full Supabase Schema for Social Application
+-- Comprehensive Supabase Schema for Social Application
 
--- SECTION 1: CREATE TABLES
+-- SECTION 1: DELETE EXISTING TABLES (OPTIONAL - USE WITH CAUTION)
+-- If you want to start fresh, uncomment and run these DELETE statements.
+-- This will ERASE ALL DATA in these tables.
+-- DO NOT RUN IN PRODUCTION WITHOUT BACKUP.
+-- Important: Drop tables in reverse order of dependencies.
+-- DROP TABLE IF EXISTS public.messages CASCADE;
+-- DROP TABLE IF EXISTS public.chat_participants CASCADE;
+-- DROP TABLE IF EXISTS public.chats CASCADE;
+-- DROP TABLE IF EXISTS public.comments CASCADE;
+-- DROP TABLE IF EXISTS public.posts CASCADE;
+-- DROP TABLE IF EXISTS public.relationships CASCADE;
+-- DROP TABLE IF EXISTS public.profiles CASCADE;
+
+
+-- SECTION 2: CREATE TABLES
 --------------------------------------------------------------------------------
 
 -- Table: public.profiles
 -- Stores additional public user data linked to Supabase Auth users
-CREATE TABLE public.profiles (
+CREATE TABLE IF NOT EXISTS public.profiles (
   id uuid REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   username text UNIQUE NOT NULL,
   avatar_url text,
@@ -15,19 +29,19 @@ CREATE TABLE public.profiles (
 
 -- Table: public.posts
 -- Stores user posts
-CREATE TABLE public.posts (
+CREATE TABLE IF NOT EXISTS public.posts (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   content text NOT NULL,
   image_url text,
   created_at timestamp with time zone DEFAULT now(),
-  -- NEW LINE: Add foreign key constraint to profiles table
+  -- Foreign key constraint to profiles table
   CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.profiles(id) ON DELETE CASCADE
 );
 
 -- Table: public.comments
 -- Stores comments on posts
-CREATE TABLE public.comments (
+CREATE TABLE IF NOT EXISTS public.comments (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   post_id uuid REFERENCES public.posts(id) ON DELETE CASCADE NOT NULL,
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -37,7 +51,7 @@ CREATE TABLE public.comments (
 
 -- Table: public.chats
 -- Stores chat conversations metadata
-CREATE TABLE public.chats (
+CREATE TABLE IF NOT EXISTS public.chats (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at timestamp with time zone DEFAULT now(),
   type text NOT NULL DEFAULT 'direct', -- 'direct', 'group'
@@ -46,7 +60,7 @@ CREATE TABLE public.chats (
 
 -- Table: public.chat_participants
 -- Join table for chats and users
-CREATE TABLE public.chat_participants (
+CREATE TABLE IF NOT EXISTS public.chat_participants (
   chat_id uuid REFERENCES public.chats(id) ON DELETE CASCADE NOT NULL,
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   PRIMARY KEY (chat_id, user_id)
@@ -55,7 +69,7 @@ CREATE TABLE public.chat_participants (
 
 -- Table: public.messages
 -- Stores messages within chats
-CREATE TABLE public.messages (
+CREATE TABLE IF NOT EXISTS public.messages (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   chat_id uuid REFERENCES public.chats(id) ON DELETE CASCADE NOT NULL,
   sender_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
@@ -64,7 +78,7 @@ CREATE TABLE public.messages (
 );
 
 -- Table: public.relationships (Followers/Following)
-CREATE TABLE public.relationships (
+CREATE TABLE IF NOT EXISTS public.relationships (
   follower_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   following_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   created_at timestamp with time zone DEFAULT now(),
@@ -74,7 +88,7 @@ CREATE TABLE public.relationships (
 );
 
 
--- SECTION 2: ENABLE ROW LEVEL SECURITY (RLS)
+-- SECTION 3: ENABLE ROW LEVEL SECURITY (RLS)
 --------------------------------------------------------------------------------
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
@@ -86,129 +100,114 @@ ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.relationships ENABLE ROW LEVEL SECURITY;
 
 
--- SECTION 3: CREATE RLS POLICIES
+-- SECTION 4: CREATE RLS POLICIES
 --------------------------------------------------------------------------------
 
 -- RLS Policies for public.profiles
-CREATE POLICY "Public profiles are viewable by everyone."
+CREATE POLICY IF NOT EXISTS "Public profiles are viewable by everyone."
   ON public.profiles FOR SELECT
   USING (true);
 
-CREATE POLICY "Users can insert their own profile."
+CREATE POLICY IF NOT EXISTS "Users can insert their own profile."
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
-CREATE POLICY "Users can update their own profile."
+CREATE POLICY IF NOT EXISTS "Users can update their own profile."
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
 -- RLS Policies for public.posts
-CREATE POLICY "Posts are viewable by everyone."
+CREATE POLICY IF NOT EXISTS "Posts are viewable by everyone."
   ON public.posts FOR SELECT
   USING (true);
 
-CREATE POLICY "Users can create posts."
+CREATE POLICY IF NOT EXISTS "Users can create posts."
   ON public.posts FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update their own posts."
+CREATE POLICY IF NOT EXISTS "Users can update their own posts."
   ON public.posts FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own posts."
+CREATE POLICY IF NOT EXISTS "Users can delete their own posts."
   ON public.posts FOR DELETE
   USING (auth.uid() = user_id);
 
 -- RLS Policies for public.comments
-CREATE POLICY "Comments are viewable by everyone."
+CREATE POLICY IF NOT EXISTS "Comments are viewable by everyone."
   ON public.comments FOR SELECT
   USING (true);
 
-CREATE POLICY "Users can create comments."
+CREATE POLICY IF NOT EXISTS "Users can create comments."
   ON public.comments FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can update their own comments."
+CREATE POLICY IF NOT EXISTS "Users can update their own comments."
   ON public.comments FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own comments."
+CREATE POLICY IF NOT EXISTS "Users can delete their own comments."
   ON public.comments FOR DELETE
   USING (auth.uid() = user_id);
 
 -- RLS Policies for public.chats
 -- Note: chat_participants must exist before these policies are created.
-CREATE POLICY "Chat participants can view chats."
+CREATE POLICY IF NOT EXISTS "Chat participants can view chats."
   ON public.chats FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = chats.id AND user_id = auth.uid()));
 
-CREATE POLICY "Chat participants can update chats."
+CREATE POLICY IF NOT EXISTS "Chat participants can update chats."
   ON public.chats FOR UPDATE
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = chats.id AND user_id = auth.uid()));
 
-CREATE POLICY "Chat participants can delete chats."
+CREATE POLICY IF NOT EXISTS "Chat participants can delete chats."
   ON public.chats FOR DELETE
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = chats.id AND user_id = auth.uid()));
 
 -- RLS Policies for public.chat_participants
-CREATE POLICY "Users can view their chat memberships."
+CREATE POLICY IF NOT EXISTS "Users can view their chat memberships."
   ON public.chat_participants FOR SELECT
   USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can join chats."
+CREATE POLICY IF NOT EXISTS "Users can join chats."
   ON public.chat_participants FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can leave chats."
+CREATE POLICY IF NOT EXISTS "Users can leave chats."
   ON public.chat_participants FOR DELETE
   USING (auth.uid() = user_id);
 
 -- RLS Policies for public.messages
 -- Note: chat_participants must exist before these policies are created.
-CREATE POLICY "Chat participants can view messages."
+CREATE POLICY IF NOT EXISTS "Chat participants can view messages."
   ON public.messages FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = messages.chat_id AND user_id = auth.uid()));
 
-CREATE POLICY "Chat participants can send messages."
+CREATE POLICY IF NOT EXISTS "Chat participants can send messages."
   ON public.messages FOR INSERT
   WITH CHECK (auth.uid() = sender_id AND EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = messages.chat_id AND user_id = auth.uid()));
 
-CREATE POLICY "Users can update their own messages."
+CREATE POLICY IF NOT EXISTS "Users can update their own messages."
   ON public.messages FOR UPDATE
   USING (auth.uid() = sender_id)
   WITH CHECK (auth.uid() = sender_id);
 
-CREATE POLICY "Users can delete their own messages."
+CREATE POLICY IF NOT EXISTS "Users can delete their own messages."
   ON public.messages FOR DELETE
   USING (auth.uid() = sender_id);
 
 -- RLS Policies for public.relationships
-CREATE POLICY "Users can view relationships."
+CREATE POLICY IF NOT EXISTS "Users can view relationships."
   ON public.relationships FOR SELECT
   USING (true);
 
-CREATE POLICY "Users can create relationships (follow others)."
+CREATE POLICY IF NOT EXISTS "Users can create relationships (follow others)."
   ON public.relationships FOR INSERT
   WITH CHECK (auth.uid() = follower_id);
 
-CREATE POLICY "Users can delete relationships (unfollow others)."
+CREATE POLICY IF NOT EXISTS "Users can delete relationships (unfollow others)."
   ON public.relationships FOR DELETE
   USING (auth.uid() = follower_id);
-
--- Optional: Create a function to set a default username if not provided during profile creation
--- This can be useful for initial profile setup
--- CREATE OR REPLACE FUNCTION public.handle_new_user()
--- RETURNS trigger AS $$
--- BEGIN
---   INSERT INTO public.profiles (id, username, email)
---   VALUES (new.id, new.email, new.email); -- Use email as default username/email
---   RETURN new;
--- END;
--- $$ LANGUAGE plpgsql SECURITY DEFINER;
---
--- CREATE TRIGGER on_auth_user_created
---   AFTER INSERT ON auth.users
---   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
