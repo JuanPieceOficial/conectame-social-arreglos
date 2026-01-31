@@ -34,7 +34,7 @@ export default function FeedPage() {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching posts:", error.message || error);
         setError("Failed to fetch posts.");
         setPosts([]);
       } else {
