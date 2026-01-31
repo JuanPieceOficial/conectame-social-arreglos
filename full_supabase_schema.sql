@@ -104,110 +104,110 @@ ALTER TABLE public.relationships ENABLE ROW LEVEL SECURITY;
 --------------------------------------------------------------------------------
 
 -- RLS Policies for public.profiles
-CREATE POLICY IF NOT EXISTS "Public profiles are viewable by everyone."
+CREATE POLICY "Public profiles are viewable by everyone."
   ON public.profiles FOR SELECT
   USING (true);
 
-CREATE POLICY IF NOT EXISTS "Users can insert their own profile."
+CREATE POLICY "Users can insert their own profile."
   ON public.profiles FOR INSERT
   WITH CHECK (auth.uid() = id);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own profile."
+CREATE POLICY "Users can update their own profile."
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
 -- RLS Policies for public.posts
-CREATE POLICY IF NOT EXISTS "Posts are viewable by everyone."
+CREATE POLICY "Posts are viewable by everyone."
   ON public.posts FOR SELECT
   USING (true);
 
-CREATE POLICY IF NOT EXISTS "Users can create posts."
+CREATE POLICY "Users can create posts."
   ON public.posts FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own posts."
+CREATE POLICY "Users can update their own posts."
   ON public.posts FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can delete their own posts."
+CREATE POLICY "Users can delete their own posts."
   ON public.posts FOR DELETE
   USING (auth.uid() = user_id);
 
 -- RLS Policies for public.comments
-CREATE POLICY IF NOT EXISTS "Comments are viewable by everyone."
+CREATE POLICY "Comments are viewable by everyone."
   ON public.comments FOR SELECT
   USING (true);
 
-CREATE POLICY IF NOT EXISTS "Users can create comments."
+CREATE POLICY "Users can create comments."
   ON public.comments FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own comments."
+CREATE POLICY "Users can update their own comments."
   ON public.comments FOR UPDATE
   USING (auth.uid() = user_id)
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can delete their own comments."
+CREATE POLICY "Users can delete their own comments."
   ON public.comments FOR DELETE
   USING (auth.uid() = user_id);
 
 -- RLS Policies for public.chats
 -- Note: chat_participants must exist before these policies are created.
-CREATE POLICY IF NOT EXISTS "Chat participants can view chats."
+CREATE POLICY "Chat participants can view chats."
   ON public.chats FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = chats.id AND user_id = auth.uid()));
 
-CREATE POLICY IF NOT EXISTS "Chat participants can update chats."
+CREATE POLICY "Chat participants can update chats."
   ON public.chats FOR UPDATE
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = chats.id AND user_id = auth.uid()));
 
-CREATE POLICY IF NOT EXISTS "Chat participants can delete chats."
+CREATE POLICY "Chat participants can delete chats."
   ON public.chats FOR DELETE
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = chats.id AND user_id = auth.uid()));
 
 -- RLS Policies for public.chat_participants
-CREATE POLICY IF NOT EXISTS "Users can view their chat memberships."
+CREATE POLICY "Users can view their chat memberships."
   ON public.chat_participants FOR SELECT
   USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can join chats."
+CREATE POLICY "Users can join chats."
   ON public.chat_participants FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can leave chats."
+CREATE POLICY "Users can leave chats."
   ON public.chat_participants FOR DELETE
   USING (auth.uid() = user_id);
 
 -- RLS Policies for public.messages
 -- Note: chat_participants must exist before these policies are created.
-CREATE POLICY IF NOT EXISTS "Chat participants can view messages."
+CREATE POLICY "Chat participants can view messages."
   ON public.messages FOR SELECT
   USING (EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = messages.chat_id AND user_id = auth.uid()));
 
-CREATE POLICY IF NOT EXISTS "Chat participants can send messages."
+CREATE POLICY "Chat participants can send messages."
   ON public.messages FOR INSERT
   WITH CHECK (auth.uid() = sender_id AND EXISTS (SELECT 1 FROM public.chat_participants WHERE chat_id = messages.chat_id AND user_id = auth.uid()));
 
-CREATE POLICY IF NOT EXISTS "Users can update their own messages."
+CREATE POLICY "Users can update their own messages."
   ON public.messages FOR UPDATE
   USING (auth.uid() = sender_id)
   WITH CHECK (auth.uid() = sender_id);
 
-CREATE POLICY IF NOT EXISTS "Users can delete their own messages."
+CREATE POLICY "Users can delete their own messages."
   ON public.messages FOR DELETE
   USING (auth.uid() = sender_id);
 
 -- RLS Policies for public.relationships
-CREATE POLICY IF NOT EXISTS "Users can view relationships."
+CREATE POLICY "Users can view relationships."
   ON public.relationships FOR SELECT
   USING (true);
 
-CREATE POLICY IF NOT EXISTS "Users can create relationships (follow others)."
+CREATE POLICY "Users can create relationships (follow others)."
   ON public.relationships FOR INSERT
   WITH CHECK (auth.uid() = follower_id);
 
-CREATE POLICY IF NOT EXISTS "Users can delete relationships (unfollow others)."
+CREATE POLICY "Users can delete relationships (unfollow others)."
   ON public.relationships FOR DELETE
   USING (auth.uid() = follower_id);
